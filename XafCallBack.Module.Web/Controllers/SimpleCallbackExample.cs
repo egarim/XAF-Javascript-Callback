@@ -61,7 +61,7 @@ namespace XafCallBack.Module.Web.Controllers
             base.OnDeactivated();
         }
 
-        public void ProcessAction(string parameter)
+        void IXafCallbackHandler.ProcessAction(string parameter)
         {
             CallbackManager.NeedEndResponse = false;
             string Script = $"alert('the script was executed and the parameter value is {parameter}')";
