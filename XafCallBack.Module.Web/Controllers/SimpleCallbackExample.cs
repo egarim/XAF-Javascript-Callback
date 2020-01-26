@@ -33,11 +33,7 @@ namespace XafCallBack.Module.Web.Controllers
             ExecuteScriptWithCallback.Execute += ExecuteScriptWithCallback_Execute;
            
         }
-        //protected override void SubscribeToViewEvents(DevExpress.ExpressApp.View view)
-        //{
-        //    base.SubscribeToViewEvents(view);
-        //    CallbackManager.RegisterHandler("MyScript", this);
-        //}
+     
         private void ExecuteScriptWithCallback_Execute(object sender, SimpleActionExecuteEventArgs e)
         {
             ((WebWindow)this.Frame).RegisterStartupScript("ExecuteScriptFromAction", "RaiseXafCallback(globalCallbackControl, 'MyScript', 'Hello XAF!!! from java script', '', false);");
@@ -83,9 +79,9 @@ namespace XafCallBack.Module.Web.Controllers
                     //callbackManager.RegisterHandler("Javier", this);
                     //var script = callbackManager.GetScript("Javier", "e.group.index");
                     //NavBar.ClientSideEvents.HeaderClick ="function(s, e){" + script + "}";
-                    //NavBar.ClientSideEvents.HeaderClick = "function(s, e){RaiseXafCallback(globalCallbackControl, 'Javier', 'test', '', false);}";
+                    NavBar.ClientSideEvents.HeaderClick = "function(s, e){ RaiseXafCallback(globalCallbackControl, 'MyScript', 'Hello XAF!!! from java script', '', false);  }";
                     //NavBar.ClientSideEvents.HeaderClick = @"function(s, e){" + script.Split(';')[0] + "}";
-                    NavBar.ClientSideEvents.HeaderClick = @"function(s,e){alert('OK')}";
+                    //NavBar.ClientSideEvents.HeaderClick = @"function(s,e){alert('OK')}";
                     //NavBar.ClientSideEvents.HeaderClick = @"function(s,e){if (confirm('This action will overwrite all the current configurations. Do you want to proceed?')) {                                
                     //                RaiseXafCallback(globalCallbackControl, 'script', 'true', '', false);}}";
                 }
