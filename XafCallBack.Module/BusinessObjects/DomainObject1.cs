@@ -15,6 +15,7 @@ using DevExpress.Persistent.Validation;
 namespace XafCallBack.Module.BusinessObjects
 {
     [DefaultClassOptions]
+    [NavigationItem("Otro")]
     //[ImageName("BO_Contact")]
     //[DefaultProperty("DisplayMemberNameForLookupEditorsOfThisType")]
     //[DefaultListViewOptions(MasterDetailMode.ListViewOnly, false, NewItemRowPosition.None)]

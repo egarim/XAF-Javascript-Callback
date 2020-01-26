@@ -13,8 +13,10 @@ using DevExpress.ExpressApp.Templates;
 using DevExpress.ExpressApp.Utils;
 using DevExpress.ExpressApp.Web;
 using DevExpress.ExpressApp.Web.Templates;
+using DevExpress.ExpressApp.Web.Templates.ActionContainers;
 using DevExpress.Persistent.Base;
 using DevExpress.Persistent.Validation;
+using DevExpress.Web;
 using XafCallBack.Module.BusinessObjects;
 
 namespace XafCallBack.Module.Web.Controllers
@@ -25,12 +27,17 @@ namespace XafCallBack.Module.Web.Controllers
         public SimpleCallbackExample()
         {
             InitializeComponent();
-            this.TargetObjectType = typeof(DomainObject1);
+            //this.TargetObjectType = typeof(DomainObject1);
             SimpleAction ExecuteScriptWithCallback = new SimpleAction(this, "ExecuteScriptWithCallback", PredefinedCategory.View);
             ExecuteScriptWithCallback.Caption = "Execute script with callback to code behind";
             ExecuteScriptWithCallback.Execute += ExecuteScriptWithCallback_Execute;
+           
         }
-
+        //protected override void SubscribeToViewEvents(DevExpress.ExpressApp.View view)
+        //{
+        //    base.SubscribeToViewEvents(view);
+        //    CallbackManager.RegisterHandler("MyScript", this);
+        //}
         private void ExecuteScriptWithCallback_Execute(object sender, SimpleActionExecuteEventArgs e)
         {
             ((WebWindow)this.Frame).RegisterStartupScript("ExecuteScriptFromAction", "RaiseXafCallback(globalCallbackControl, 'MyScript', 'Hello XAF!!! from java script', '', false);");
@@ -44,7 +51,8 @@ namespace XafCallBack.Module.Web.Controllers
         protected override void OnActivated()
         {
             base.OnActivated();
-
+            Frame.ProcessActionContainer += Frame_ProcessActionContainer;
+          
             // Perform various tasks depending on the target View.
         }
 
@@ -59,8 +67,30 @@ namespace XafCallBack.Module.Web.Controllers
         {
             // Unsubscribe from previously subscribed events and release other references and resources.
             base.OnDeactivated();
+            Frame.ProcessActionContainer -= Frame_ProcessActionContainer;
         }
-
+        private ASPxNavBar NavBar = null;
+        private void Frame_ProcessActionContainer(object sender, ProcessActionContainerEventArgs e)
+        {
+            if (e.ActionContainer is NavigationActionContainer)
+            {
+                NavBar = ((NavigationActionContainer)e.ActionContainer).NavigationControl as ASPxNavBar;
+                if (NavBar != null)
+                {
+                    //NavBar.AllowExpanding = false;
+                    NavBar.EnableClientSideAPI = true;
+                    //XafCallbackManager callbackManager = ((ICallbackManagerHolder)WebWindow.CurrentRequestPage).CallbackManager;
+                    //callbackManager.RegisterHandler("Javier", this);
+                    //var script = callbackManager.GetScript("Javier", "e.group.index");
+                    //NavBar.ClientSideEvents.HeaderClick ="function(s, e){" + script + "}";
+                    //NavBar.ClientSideEvents.HeaderClick = "function(s, e){RaiseXafCallback(globalCallbackControl, 'Javier', 'test', '', false);}";
+                    //NavBar.ClientSideEvents.HeaderClick = @"function(s, e){" + script.Split(';')[0] + "}";
+                    NavBar.ClientSideEvents.HeaderClick = @"function(s,e){alert('OK')}";
+                    //NavBar.ClientSideEvents.HeaderClick = @"function(s,e){if (confirm('This action will overwrite all the current configurations. Do you want to proceed?')) {                                
+                    //                RaiseXafCallback(globalCallbackControl, 'script', 'true', '', false);}}";
+                }
+            }
+        }
         void IXafCallbackHandler.ProcessAction(string parameter)
         {
             CallbackManager.NeedEndResponse = false;
